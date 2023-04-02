@@ -77,28 +77,22 @@ local diagnostics_to_tbl = function(opts)
     end
   end
 
-  -- sort results by bufnr (prioritize cur buf), severity, lnum
+  -- sort results by severity, bufnr, lnum
   table.sort(items, function(a, b)
-    if a.bufnr == b.bufnr then
-      if a.type == b.type then
+    if a.type == b.type then
+      if a.bufnr == b.bufnr then
         return a.lnum < b.lnum
       else
-        return a.type < b.type
+        return a.bufnr < b.bufnr
       end
     else
-      -- prioritize for current bufnr
-      if a.bufnr == current_buf then
-        return true
-      end
-      if b.bufnr == current_buf then
-        return false
-      end
-      return a.bufnr < b.bufnr
+      return a.type < b.type
     end
   end)
 
   return items
 end
+
 
 diagnostics.get = function(opts)
   if opts.bufnr ~= 0 then
